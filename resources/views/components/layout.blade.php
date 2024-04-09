@@ -4,8 +4,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Laravel 11 tutorial</title>
+    @vite('resources/css/app.css')
 </head>
-<body>
-    {{ $slot }}
+<body class="bg-slate-100 dark:bg-slate-800">
+   <x-navbar />
+   <div class="max-w-6xl mx-auto">
+        {{ $slot }}
+   </div>
 </body>
 </html>
