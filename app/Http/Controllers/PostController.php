@@ -13,10 +13,10 @@ class PostController extends Controller
     public function index()
     {
         // get all posts from database
-        $name = 'Alfred';
-        $age = 32;
-        $posts = ['post 1', 'post 2', 'another post', 'last post'];
-        return view('posts.index', ['username' => $name, 'age' => $age, 'posts' => $posts]);
+
+        $posts = Post::all();
+        
+        return view('posts.index', ['posts' => $posts]);
     }
 
     /**
@@ -32,7 +32,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => "required"
+        ]);
+
+        Post::create($validated);
+
+        return redirect()->route('posts.index');
     }
 
     /**
