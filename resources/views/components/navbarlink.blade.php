@@ -1,7 +1,5 @@
 @props (['active' => false])
 
-
-
 <li>
     <a {{ $attributes }}
     @class(['block py-2 px-3 rounded  md:p-0 dark:text-white ', 
