@@ -1,7 +1,7 @@
 <x-layout>
     <x-header>Create post</x-header>
     <div class="max-w-2xl mx-auto p-4 bg-slate-200 dark:bg-slate-900 rounded-lg">
-        <form method="POST" action="/posts">
+        <form method="POST" action="{{ route('posts.store') }}">
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     <span class="text-red-500">{{ $error }} </span>

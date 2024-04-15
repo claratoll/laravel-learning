@@ -64,7 +64,13 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+        $validated = $request->validate([
+            'title' => 'required|max:255',
+            'content' => "required"
+        ]);
+
+        $post->update($validated);
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -74,4 +80,10 @@ class PostController extends Controller
     {
         //
     }
+    
+    public function search(Request $request)
+    {
+        return view('posts.search');
+    }
 }
+
