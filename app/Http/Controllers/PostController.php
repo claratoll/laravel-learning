@@ -10,6 +10,14 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+
+     public function welcome()
+    {
+        $posts = Post::all();
+        return view('welcome', ['posts' => $posts]);
+    }
+    
     public function index()
     {
         // get all posts from database
@@ -38,7 +46,7 @@ class PostController extends Controller
             'content' => "required"
         ]);
 
-        Post::create($validated);
+        auth()->user()->posts()->create($validated);
 
         return redirect()->route('posts.index');
     }
@@ -56,6 +64,7 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        Gate::authorize('update', $post);
         return view('posts.edit', ['post' => $post]);
     }
 
@@ -64,12 +73,15 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+        Gate::authorize('update', $post);
         $validated = $request->validate([
             'title' => 'required|max:255',
             'content' => "required"
         ]);
 
         $post->update($validated);
+                
+        
         return redirect()->route('posts.index');
     }
 
@@ -78,6 +90,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        Gate::authorize('delete', $post);
         $post->delete();
         return to_route('posts.index');
     }
