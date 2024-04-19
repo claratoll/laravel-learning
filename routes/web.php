@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::get('/posts/{post}', [PostController::class, 'show'])->middleware('can-view-post')->name('posts.show');
+Route::get('/search', [PostController::class, 'search'])->name('search');
+Route::post('/search/{query}', [PostController::class, 'searchQuery'])->name('searchQuery');
+
 
 
 Route::middleware('guest')->group(function () {

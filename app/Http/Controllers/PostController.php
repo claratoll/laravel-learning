@@ -95,9 +95,28 @@ class PostController extends Controller
         return to_route('posts.index');
     }
     
-    public function search(Request $request)
+    public function search()
     {
-        return view('posts.search');
+        $posts = Post::all();
+
+        return view('posts.search', ['posts' => $posts]);
     }
+    
+    public function searchQuery(Request $request)
+    {
+        $search = $request->input('search');
+
+        if ($search) {
+            $posts = Post::where('title', 'like', "%$search%")
+            ->orWhere('content', 'like', "%$search%")
+            ->get();
+
+        } else {
+            $posts = Post::all();
+        }
+        return view('posts.search', ['posts' => $posts]);
+    }
+    
+
 }
 
