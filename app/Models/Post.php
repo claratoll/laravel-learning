@@ -10,11 +10,26 @@ class Post extends Model
 {
     use HasFactory, Searchable;
 
-    protected $fillable = ['title', 'content'];
+    protected $fillable = ['title', 'content', 'user_id'];
 
-    public function searchableAs(): string
+    public function toSearchableArray()
+{
+    // Hämta arrayen som ska indexeras av Scout.
+    $array = $this->toArray();
+
+    // Anpassa arrayen efter dina behov.
+    return $array;
+}
+
+    public function searchableAs()
     {
         return 'posts_index';
+    }
+    
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
 

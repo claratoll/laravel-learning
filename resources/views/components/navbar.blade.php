@@ -20,6 +20,7 @@
                 <x-navbarlink href="/" :active="request()->is('/')">Home</x-navbarlink>
                 <x-navbarlink href="/posts" :active="request()->is('posts')">Posts</x-navbarlink>
                 @auth
+                    <span class="text-blue-600 dark:text-blue-400 font-semibold">{{ Auth::user()->name }}</span>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <x-navbarlink href="/posts" :active="false"
