@@ -16,6 +16,11 @@ class DatabaseSeeder extends Seeder
     {
         Post::factory(10)->create();
 
-       
+        User::create([
+            'name' => 'Admin User',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('your_password'), // Använd bcrypt för att kryptera lösenordet
+            'is_admin' => true, // Ange att användaren är en admin
+        ]);
     }
 }

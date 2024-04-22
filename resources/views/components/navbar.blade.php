@@ -21,6 +21,9 @@
                 <x-navbarlink href="/posts" :active="request()->is('posts')">Posts</x-navbarlink>
                 <x-navbarlink href="/search" :active="request()->is('search')">Search</x-navbarlink>
 
+                @if(Auth::check() && Auth::user()->is_admin)
+                    <x-navbarlink href="/admin" :active="request()->is('admin')">Admin</x-navbarlink>
+                @endif
                 @auth
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

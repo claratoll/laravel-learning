@@ -3,7 +3,9 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\LoginUserController;
+use App\Http\Controllers\AdminPostsController;
 use App\Http\Controllers\RegisterUserController;
 
 Route::get('/', [PostController::class, 'welcome']);
@@ -16,14 +18,17 @@ Route::middleware('auth')->group(function () {
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::post('/logout', [LoginUserController::class, 'logout'])->name('logout');
 
-    Route::get('/admin', function(){
-        return 'You are logged in as an admin';
-    })->middleware('can:is-admin')->name('admin');
+    Route::middleware('is-admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+        Route::get('/admin/posts/{post}/edit', [AdminPostsController::class, 'edit'])->name('admin.posts.edit');
+        Route::put('/admin/posts/{post}', [AdminPostsController::class, 'update'])->name('admin.posts.update');
+        Route::delete('/admin/posts/{post}', [AdminPostsController::class, 'destroy'])->name('admin.posts.destroy');
+    });
 });
 
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::get('/posts/{post}', [PostController::class, 'show'])->middleware('can-view-post')->name('posts.show');
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 Route::get('/search', [PostController::class, 'search'])->name('search');
 Route::post('/search/{query}', [PostController::class, 'searchQuery'])->name('searchQuery');
 

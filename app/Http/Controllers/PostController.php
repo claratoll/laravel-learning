@@ -81,8 +81,7 @@ class PostController extends Controller
 
         $post->update($validated);
                 
-        
-        return redirect()->route('posts.index');
+        return to_route('posts.show', ['post' => $post]);
     }
 
     /**
