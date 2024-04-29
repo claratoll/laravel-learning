@@ -1,5 +1,6 @@
 <x-layout>
     <div class="max-w-6xl mx-auto sm:px-6 lg:px-8 mt-8 rounded-lg">
+        <img class="h-auto max-w-lg rounded-lg" src="{{ asset('storage/' . $post->thumbnail) }}" alt="image description">
         <h1 class="text-3xl text-indigo-800 font-semibold pt-8">{{ $post->title }}</h1>
         <main class="max-w-6xl mx-auto mt-6 lg:mt-20 space-y-6">
             <p class="text-gray-600 pb-8">{{ $post->content }} </p>

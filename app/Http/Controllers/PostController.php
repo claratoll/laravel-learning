@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Mail\PostMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -23,7 +27,6 @@ class PostController extends Controller
         // get all posts from database
 
         $posts = Post::all();
-        
         return view('posts.index', ['posts' => $posts]);
     }
 
@@ -42,13 +45,19 @@ class PostController extends Controller
     {
 
         $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => "required"
+            'title' => ['required', 'min:5', 'max:255'],
+            'content' => ['required', 'min:10'],
+            'thumbnail' => ['required', 'image'],
         ]);
+
+
+        $validated['thumbnail'] = $request->file('thumbnail')->store('thumbnails');
 
         auth()->user()->posts()->create($validated);
 
-        return redirect()->route('posts.index');
+        Mail::to(auth()->user()->email)->send(new PostMail(['name' => auth()->user()->name, 'title' => $validated['title']]));
+
+        return to_route('posts.index');
     }
 
     /**
@@ -75,12 +84,16 @@ class PostController extends Controller
     {
         Gate::authorize('update', $post);
         $validated = $request->validate([
-            'title' => 'required|max:255',
-            'content' => "required"
+            'title' => ['required', 'min:5', 'max:255'],
+            'content' => ['required', 'min:10'],
+            'thumbnail' => ['sometimes', 'image'],
         ]);
 
+        if ($request->hasFile('thumbnail')) {
+            File::delete(storage_path('app/public/' . $post->thumbnail));
+            $validated['thumbnail'] = $request->file('thumbnail')->store('thumbnails');
+        }
         $post->update($validated);
-                
         return to_route('posts.show', ['post' => $post]);
     }
 
@@ -90,6 +103,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         Gate::authorize('delete', $post);
+        File::delete(storage_path('app/public' . $post->thumbnail));
         $post->delete();
         return to_route('posts.index');
     }

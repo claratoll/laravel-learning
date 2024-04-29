@@ -11,7 +11,12 @@ class Post extends Model
 {
     use HasFactory, Searchable;
 
-    protected $fillable = ['title', 'content', 'user_id'];
+    protected $fillable = [
+        'title', 
+        'content', 
+        'user_id', 
+        'thumbnail',
+    ];
 
     public function searchableAs(): string
     {
