@@ -1,13 +1,17 @@
 <?php
 
-use App\Mail\PostCountMail;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Foundation\Application;
-use App\Http\Middleware\IsAdminMiddleware;
-use Illuminate\Console\Scheduling\Schedule;
 use App\Http\Middleware\CanViewPostMiddleware;
+use App\Http\Middleware\IsAdminMiddleware;
+use App\Mail\PostCountMail;
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
