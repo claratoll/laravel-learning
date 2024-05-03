@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendNewPostMailJob;
 use App\Models\Post;
 use Illuminate\Http\Request;
-use App\Jobs\SendNewPostMailJob;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PostController extends Controller
 {
@@ -25,7 +25,18 @@ class PostController extends Controller
     {
         // get all posts from database
 
-        $posts = Post::paginate(6);
+      /*  if (Cache::has('posts')) {
+            $posts = Cache::get('posts');
+        } else {
+            sleep(4);
+            $posts = Post::paginate(6);
+            Cache::put('posts', $posts, 10);
+        }
+*/
+        $posts = Cache::remember('posts', 10, function () {
+            sleep(4);
+            return Post::paginate(6);
+        });
 
         return view('posts.index', ['posts' => $posts]);
     }
@@ -63,9 +74,7 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
- 
         return view('posts.show', ['post' => $post]);
-       
     }
 
     /**
